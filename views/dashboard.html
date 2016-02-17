@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<ul class="nav nav-tabs tabs">
+    <li class="active"><a data-toggle="tab" href="#tab1">ALL</a></li>
+    <li><a data-toggle="tab" href="#tab2">ENTREPRENEURSHIP</a></li>
+    <li><a data-toggle="tab" href="#tab3">FINANCE</a></li>
+    <li><a data-toggle="tab" href="#tab4">OTHERS</a></li>
+</ul>
+
+<div class="tab-content tabs">
+    <div id="tab1" class="tab-pane fade in active">
+        {% for item in list %}
+            <p class="quote">
+                <span class="left-quote-symbol">&#8220;</span>
+                <span class="right-quote-symbol">&#8221;</span>
+                <a href="{{ item.weburl }}" target="_blank">{{ item.text }}</a>
+                <div class=""></div>
+            </p>
+        {% endfor %}
+    </div>
+    <div id="tab2" class="tab-pane fade">
+        <p class="quote">
+            <span class="left-quote-symbol">&#8220;</span>
+            <span class="right-quote-symbol">&#8221;</span>
+            ENTREPRENEURSHIP TAB
+        </p>
+    </div>
+    <div id="tab3" class="tab-pane fade">
+        <p class="quote">
+            <span class="left-quote-symbol">&#8220;</span>
+            <span class="right-quote-symbol">&#8221;</span>
+            FINANCE TAB
+        </p>
+    </div>
+    <div id="tab4" class="tab-pane fade">
+        <p class="quote">
+            <span class="left-quote-symbol">&#8220;</span>
+            <span class="right-quote-symbol">&#8221;</span>
+            OTHERS TAB
+        </p>
+    </div>
+</div>
+
+{% endblock %}
