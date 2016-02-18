@@ -29,11 +29,11 @@ module.exports = function(app, passport) {
 		res.redirect('/');
 	});
 
-	app.post('/api/oauth', function(req, res){
+	app.get('/api/oauth', function(req, res){
 		// websites are allowed to connect
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		// Request methods are allowed
-		res.setHeader('Access-Control-Allow-Methods', 'POST');
+		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		// Request headers are allowed
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
