@@ -59,9 +59,9 @@ module.exports = function(app, passport) {
 
 	    var idU = req.user.id;
 	    var url = req.body.url;
-	    var response;
 
-	    user_quote.getQuotesByUrl(url, idU).then(function(_quotes){
+	    quotes.getQuotesByUrl(url, idU).then(function(_quotes){
+	    	var response;
 	    	if (_quotes.length > 0) {
 	    		var quoteText = [];
 	    		for (var i = 0; i < _quotes.length; i++) {
@@ -76,9 +76,8 @@ module.exports = function(app, passport) {
 	    			'found': 0
 	    		};
 	    	}
+	    	res.json(response);
 	    });
-
-	    res.json(response);
 	});
 
 	app.post('/api/delete', function(req, res){

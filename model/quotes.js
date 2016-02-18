@@ -39,7 +39,7 @@ var connection = connect.then(function(connection){
 		return userQuote.getQuotesByUser(idU).then(function(_idQs){
 			if (_idQs.length > 0) {
 				return r.table(table).getAll(r.args(_idQs)).filter(function(quote){
-					return quote('weburl').match("^"+url);
+					return quote('weburl').match(url);
 				}).run(connection).then(function(cursor){
 					return cursor.toArray();
 				});

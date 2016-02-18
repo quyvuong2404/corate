@@ -3,13 +3,6 @@ var auth = require('../lib/auth');
 
 module.exports = function(app, passport) {
 
-	app.get('/login', function(req, res) {
-		if (req.user) {
-			res.redirect('/dashboard');
-		}
-		res.render('login');
-	});
-
 	app.get('/auth/google', passport.authenticate('google', {
 		scope: ['profile','email']
 	}));
