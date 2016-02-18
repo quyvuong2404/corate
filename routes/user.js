@@ -14,7 +14,7 @@ module.exports = function(app, passport) {
 		res.redirect('/dashboard');
 	});
 
-	app.get('/dashboard', auth.isLoggedIn, function(req, res) {console.log(req.user);
+	app.get('/dashboard', auth.isLoggedIn, function(req, res) {
 		quotes.findAllByUser(req.user.id).then(function(result){
 			res.render('dashboard', {
 				list: result,
@@ -37,7 +37,6 @@ module.exports = function(app, passport) {
 		// Request headers are allowed
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-		console.log(req.user);
 		if(req.user) {
 			var result = req.user;
 			result.authenticated = 1;
