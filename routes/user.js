@@ -37,6 +37,7 @@ module.exports = function(app, passport) {
 		// Request headers are allowed
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+		console.log(req.user);
 		if(req.user) {
 			var result = req.user;console.log(result);
 			result.authenticated = 1;
