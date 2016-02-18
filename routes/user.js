@@ -14,7 +14,7 @@ module.exports = function(app, passport) {
 		res.redirect('/dashboard');
 	});
 
-	app.get('/dashboard', auth.isLoggedIn, function(req, res) {
+	app.get('/dashboard', auth.isLoggedIn, function(req, res) {console.log(req.user);
 		quotes.findAllByUser(req.user.id).then(function(result){
 			res.render('dashboard', {
 				list: result,
@@ -39,7 +39,7 @@ module.exports = function(app, passport) {
 
 		console.log(req.user);
 		if(req.user) {
-			var result = req.user;console.log(result);
+			var result = req.user;
 			result.authenticated = 1;
 			res.json(result);
 		} else {
