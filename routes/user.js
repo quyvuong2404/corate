@@ -38,7 +38,7 @@ module.exports = function(app, passport) {
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
 		if(req.user) {
-			var result = req.user;
+			var result = req.user;console.log(result);
 			result.authenticated = 1;
 			res.json(result);
 		} else {
