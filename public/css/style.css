@@ -229,45 +229,72 @@ body {
 }
 
 .tabs.tab-content {
-	font-size: 17px;
 	padding: 25px;
 	background: rgba(243, 234, 248, 0.57);
 	height: 500px;
 	overflow-y: scroll;
+	font-family: "Helvetica Neue";
 }
-.tabs.tab-content .quote {
-	width: 255px;
-	border-radius: 22px 22px 22px 22px;
-	-moz-border-radius: 22px 22px 22px 22px;
-	-webkit-border-radius: 22px 22px 22px 22px;
+.tabs.tab-content .bubble {
+	width: 298px;
+	font-size: 15px;
+	color: #5C5C5C;
+	border-radius: 20px;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
 	border: 0px solid #000000;
 	display: inline-block;
 	float: left;
 	margin-right: 45px;
 	margin-bottom: 10px;
-	background: -moz-linear-gradient(left,#F1F9A8, #ECF2C7);
-	background: linear-gradient(to left,#F1F9A8, #ECF2C7);
-	padding: 25px 30px;
+	background: -moz-linear-gradient(left, #FFFE8A, #E3FC4B 57%);
+	background: linear-gradient(to left, #FFFE8A, #E3FC4B 57%);
+	padding: 25px 41px;
 	position: relative;
+	opacity: 0.8;
 }
-.tabs.tab-content .quote a {
+.tabs.tab-content .bubble:hover {
+	z-index: 1000;
+}
+.tabs.tab-content .bubble .bubble-overlay {
+	position: absolute;
+	display: none;
+	width: 298px;
+	opacity: 0.7;
+	background: #000000;
+	font-family: "Helvetica Neue";
+	font-size: 23px;
+	border-radius: 20px;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	left: 0;
+	top: 100%;
+	text-align: center;
+	padding: 10px 0;
+}
+.tabs.tab-content .bubble .bubble-overlay a {
+	display: inline-block;
+	color: #FFFE8A;
+}
+.tabs.tab-content .bubble:hover .bubble-overlay {
+	display: block;
+}
+.tabs.tab-content .bubble a {
 	text-decoration: none;
 	color: #555;
 }
 
-.tabs.tab-content .quote .left-quote-symbol,
-.tabs.tab-content .quote .right-quote-symbol {
+.tabs.tab-content .bubble .left-bubble-symbol,
+.tabs.tab-content .bubble .right-bubble-symbol {
 	position: absolute;
+	font-size: 20px;
+	top: 12px;
 }
-.tabs.tab-content .quote .left-quote-symbol {
-	left: 18px;
-    top: 12px;
-    font-size: 25px;
+.tabs.tab-content .bubble .left-bubble-symbol {
+	left: 15px;
 }
-.tabs.tab-content .quote .right-quote-symbol {
-	right: 18px;
-    top: 12px;
-    font-size: 25px;
+.tabs.tab-content .bubble .right-bubble-symbol {
+	right: 15px;
 }
 
 .homepage-content {

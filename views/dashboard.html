@@ -13,32 +13,36 @@
 <div class="tab-content tabs">
     <div id="tab1" class="tab-pane fade in active">
         {% for item in list %}
-            <p class="quote">
-                <span class="left-quote-symbol">&#8220;</span>
-                <span class="right-quote-symbol">&#8221;</span>
+            <div class="bubble">
+                <span class="left-bubble-symbol">&#8220;</span>
+                <span class="right-bubble-symbol">&#8221;</span>
                 <a href="{{ item.weburl }}" target="_blank">{{ item.text }}</a>
-                <div class=""></div>
-            </p>
+                <div class="bubble-overlay">
+                    <a href="#"><i class="fa fa-files-o"></i><br><span>Copy</span></a>
+                    <a href="#" style="margin: 0 27px"><i class="fa fa-file-text-o"></i><br><span>URL</span></a>
+                    <a href="#"><i class="fa fa-upload"></i><br><span>Share</span></a>
+                </div>
+            </div>
         {% endfor %}
     </div>
     <div id="tab2" class="tab-pane fade">
-        <p class="quote">
-            <span class="left-quote-symbol">&#8220;</span>
-            <span class="right-quote-symbol">&#8221;</span>
+        <p class="bubble">
+            <span class="left-bubble-symbol">&#8220;</span>
+            <span class="right-bubble-symbol">&#8221;</span>
             ENTREPRENEURSHIP TAB
         </p>
     </div>
     <div id="tab3" class="tab-pane fade">
-        <p class="quote">
-            <span class="left-quote-symbol">&#8220;</span>
-            <span class="right-quote-symbol">&#8221;</span>
+        <p class="bubble">
+            <span class="left-bubble-symbol">&#8220;</span>
+            <span class="right-bubble-symbol">&#8221;</span>
             FINANCE TAB
         </p>
     </div>
     <div id="tab4" class="tab-pane fade">
-        <p class="quote">
-            <span class="left-quote-symbol">&#8220;</span>
-            <span class="right-quote-symbol">&#8221;</span>
+        <p class="bubble">
+            <span class="left-bubble-symbol">&#8220;</span>
+            <span class="right-bubble-symbol">&#8221;</span>
             OTHERS TAB
         </p>
     </div>

@@ -25,6 +25,7 @@ module.exports = function(app, passport) {
 					text: req.body.text,
 					webtitle: req.body.title,
 					weburl: req.body.url,
+					path: req.body.nodePath,
 					created_at: r.now()
 				};
 				quotes.create(data).then(function(result){
@@ -65,7 +66,7 @@ module.exports = function(app, passport) {
 	    	if (_quotes.length > 0) {
 	    		var quoteText = [];
 	    		for (var i = 0; i < _quotes.length; i++) {
-	    			quoteText.push({'id': _quotes[i].id, 'text': _quotes[i].text});
+	    			quoteText.push({'id': _quotes[i].id, 'text': _quotes[i].text, 'path': _quotes[i].path});
 	    		}
 	    		response = {
 	    			'found': 1,

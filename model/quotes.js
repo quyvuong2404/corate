@@ -1,7 +1,6 @@
 var r = require('rethinkdb');
 var config = require('../config/database');
 var connect = config.connect;
-var handleError = require('../routes/error');
 var table = 'quote';
 var userQuote = require('./user_quote');
 
