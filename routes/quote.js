@@ -1,14 +1,21 @@
 var r = require('rethinkdb');
+var Promise=require('promise');
+
 var quotes = require('../model/quotes');
 var users = require('../model/users');
 var userQuote = require('../model/user_quote');
+var articles=require('../model/articles');
+
 var auth = require('../lib/auth');
+
+var AlchemyAPI=require('../lib/alchemyapi');
+var alchemyapi=new AlchemyAPI();
 
 module.exports = function(app, passport) {
 
 	app.post('/api/create', function(req, res) {
 		// Website are allowed to connect
-	    res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('Access-Control-Allow-Origin', '*');
 
 	    // Request methods are allowed
 	    res.setHeader('Access-Control-Allow-Methods', 'POST');
@@ -16,41 +23,91 @@ module.exports = function(app, passport) {
 	    // Request headers are allowed
 	    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-		var id = req.body.id;
+	    var id = req.body.id;
 
-		users.getUserByField('id', id).then(function(_users){
-			if (_users.length > 0) {
-				var u = _users[0];
-				var data = {
-					text: req.body.text,
-					webtitle: req.body.title,
-					weburl: req.body.url,
-					path: req.body.nodePath,
-					created_at: r.now()
-				};
-				quotes.create(data).then(function(result){
-					if (result.inserted == 1) {
-						var data = {
-							idU: u.id,
-							idQ: result.generated_keys[0]
-						};
-						userQuote.insert(data).then(function(result){
-							if (result.inserted == 1) {
-								console.log('insert success');
-								res.json({error: 0, id: data.idQ});
-							}
-						});
-					}
-				});
-			} else {
-				res.json({error: 1});
-			}
-		});
-	});
+	    users.getUserByField('id', id).then(function(_users){
+	    	if (_users.length > 0) {
+	    		var u = _users[0];
+	    		articles.getArticleByField('url',req.body.url).then(
+	    			(result)=>{
+	    				var quote={
+	    					text:req.body.text,
+	    					path:req.body.nodePath,
+	    					url:req.body.url,
+	    					created_at:r.now()
+	    				};
+	    				var dup=result.length;
+	    				quotes.create(quote).then(
+	    					(result)=>{
+	    						res.json({error:0});
+	    						var idQuote=result.generated_keys[0];
+	    						if (dup===0){
+	    							var output = {};
 
-	app.post('/api/on', function(req, res){
+			    					keywords(req,res,output);
+
+			    					function keywords(req, res, output) {
+										alchemyapi.keywords('url', req.body.url, {}, function(response) {
+											output['keywords'] = { text:req.body.url, response:JSON.stringify(response,null,4), results:response['keywords'] };
+											concepts(req, res, output);
+										});
+									}
+
+
+									function concepts(req, res, output) {
+										alchemyapi.concepts('url', req.body.url, {}, function(response) {
+											output['concepts'] = { text:req.body.url, response:JSON.stringify(response,null,4), results:response['concepts'] };
+											author(req, res, output);
+										});
+									}
+
+									function author(req, res, output) {
+										alchemyapi.author('url', req.body.url, {}, function(response) {
+											output['author'] = { url:req.body.url, response:JSON.stringify(response,null,4), results:response['author'] };
+											taxonomy(req, res, output);
+										});
+									}
+
+									function taxonomy(req, res, output) {
+										alchemyapi.taxonomy('url', req.body.url, {}, function(response) {
+											output['taxonomy'] = { url:req.body.url, response:JSON.stringify(response,null,4), results:response['taxonomy'] };
+											var article={
+												title:req.body.title,
+												url:req.body.url,
+												keywords:output['keywords'].results,
+												taxonomy:output['taxonomy'].results.filter((taxonomy)=>taxonomy.score>0.5),
+												concepts:output['concepts'].results,
+												author:output['author'].results,
+												created_at:r.now()
+											};
+											articles.addArticle(article).then(
+												(result)=>{
+													quotes.update(idQuote,{idArticle:result.generated_keys[0]}).then(
+														(result)=>{
+															userQuote.insert({idUser:u.id,idQuote:idQuote}).then(
+																(result)=>console.log('Insert successfully'),
+																(error)=>res.json({error:1}));
+														},
+														(error)=>res.json({error:1}));
+												},
+												(error)=>res.json({error:1}));
+										});
+									}
+	    						}
+	    					},
+	    					(error)=>res.json({error:1}));
+	    			},
+	    			(error)=>res.json({error:1})
+	    		);
+	    	} else {
+	    		res.json({error: 1});
+	    	}
+	    });
+});
+
+app.post('/api/on', function(req, res){
 		// Website are allowed to connect
-	    res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('Access-Control-Allow-Origin', '*');
 
 	    // Request methods are allowed
 	    res.setHeader('Access-Control-Allow-Methods', 'POST');
@@ -58,10 +115,10 @@ module.exports = function(app, passport) {
 	    // Request headers are allowed
 	    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-	    var idU = req.user.id;
+	    var idUser = req.user.id;
 	    var url = req.body.url;
 
-	    quotes.getQuotesByUrl(url, idU).then(function(_quotes){
+	    quotes.getQuotesByUrl(url, idUser).then(function(_quotes){
 	    	var response;
 	    	if (_quotes.length > 0) {
 	    		var quoteText = [];
@@ -81,7 +138,7 @@ module.exports = function(app, passport) {
 	    });
 	});
 
-	app.post('/api/delete', function(req, res){
+app.post('/api/delete', function(req, res){
 		// Websites are allowed to connect
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		// Request methods are allowed
@@ -89,10 +146,10 @@ module.exports = function(app, passport) {
 		// Request headers are allowed
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-		var idQ = req.body.idQ;
-		quotes.delete(idQ).then(function(result){
+		var idQuote = req.body.idQuote;
+		quotes.delete(idQuote).then(function(result){
 			res.json({'deleted': result.deleted});
 		});
 	});
-	
+
 }
