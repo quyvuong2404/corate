@@ -5,10 +5,11 @@ var userQuote = require('../model/user_quote');
 var article = require('../model/article');
 var auth = require('../lib/auth');
 var alchemyActions = require('../watson-api/alchemy-action');
+var auth = require('../lib/auth');
 
 module.exports = function(app, passport) {
 
-	app.post('/api/create', function(req, res) {
+	app.post('/api/create', auth.isLoggedIn, function(req, res) {
 		// Website are allowed to connect
 	    res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -62,11 +63,10 @@ module.exports = function(app, passport) {
 										
 										alchemyActions.keywords(url, function(result){
 											var keywords = result.keywords;
-											var keywordsLength = keywords.length;
-											var keywordsData = [];
-											for (var i = 0; i < keywordsLength; i++) {
-												keywordsData.push({'relevance': keywords[i].relevance, 'text': keywords[i].text});
-											}
+											var keywordsData = keywords.map((keyword) => ({
+												'relevance': keyword.relevance, 
+												'text': keyword.text
+											}));
 											article.update(idArticle, {'keywords': keywordsData}).then(function(result){
 												console.log('keywords update');
 											});
@@ -74,13 +74,10 @@ module.exports = function(app, passport) {
 										
 										alchemyActions.taxonomy(url, function(result){
 											var taxonomy = result.taxonomy;
-											var taxonomyLength = taxonomy.length;
-											var taxonomyData = [];
-											for (var i = 0; i < taxonomyLength; i++) {
-												if (taxonomy[i].score > 0.5) {
-													taxonomyData.push({'score': taxonomy[i].score, 'label': taxonomy[i].label});
-												}
-											}
+											var taxonomyData = taxonomy.filter((taxonomy) => taxonomy.score > 0.5).map((taxonomy) => ({
+												'score': taxonomy.score, 
+												'label': taxonomy.label
+											}));
 											article.update(idArticle, {'taxonomy': taxonomyData}).then(function(result){
 												console.log('taxonomy update');
 											});
@@ -88,11 +85,10 @@ module.exports = function(app, passport) {
 										
 										alchemyActions.concepts(url, function(result){
 											var concepts = result.concepts;
-											var conceptsLength = concepts.length;
-											var conceptsData = [];
-											for (var i = 0; i < conceptsLength; i++) {
-												conceptsData.push({'relevance': concepts[i].relevance, 'text': concepts[i].text});
-											}
+											var conceptsData = concepts.map((concept) => ({
+												'relevance': concept.relevance, 
+												'text': concept.text
+											}));
 											article.update(idArticle, {'concepts': conceptsData}).then(function(result){
 												console.log('concepts update');
 											});
@@ -119,7 +115,7 @@ module.exports = function(app, passport) {
 		});
 	});
 
-	app.post('/api/on', function(req, res){
+	app.post('/api/on', auth.isLoggedIn, function(req, res){
 		// Website are allowed to connect
 	    res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -135,10 +131,11 @@ module.exports = function(app, passport) {
 	    quotes.getQuotesByUrl(url, idU).then(function(_quotes){
 	    	var response;
 	    	if (_quotes.length > 0) {
-	    		var quoteText = [];
-	    		for (var i = 0; i < _quotes.length; i++) {
-	    			quoteText.push({'id': _quotes[i].id, 'text': _quotes[i].htmltext, 'path': _quotes[i].path});
-	    		}
+	    		var quoteText = _quotes.map((_quote) => ({
+	    			'id': _quote.id, 
+	    			'text': _quote.htmltext, 
+	    			'path': _quote.path
+	    		}));
 	    		response = {
 	    			'found': 1,
 	    			'text': quoteText
@@ -152,7 +149,7 @@ module.exports = function(app, passport) {
 	    });
 	});
 
-	app.post('/api/delete', function(req, res){
+	app.post('/api/delete', auth.isLoggedIn, function(req, res){
 		// Websites are allowed to connect
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		// Request methods are allowed
