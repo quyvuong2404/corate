@@ -24,8 +24,8 @@ var connection = connect.then(function(connection){
 		});
 	}
 
-	module.exports.update = function(data) {
-		return r.table(table).update(data).run(connection);
+	module.exports.update = function(id, data) {
+		return r.table(table).get(id).update(data).run(connection);
 	}
 
 	module.exports.delete = function(id) {

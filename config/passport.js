@@ -32,7 +32,7 @@ module.exports = function(passport) {
 		callbackURL: configAuth.googleAuth.callbackURL
 	},
 	function(token, refreshToken, profile, done){
-		process.nextTick(function(){console.log(token);
+		process.nextTick(function(){
 			user.getUserByField('email', profile.emails[0].value).then(function(_users){
 				if (_users.length > 0) {
 					var u = _users[0];
