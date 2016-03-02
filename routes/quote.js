@@ -3,7 +3,7 @@ var r = require('rethinkdb');
 var quotes = require('../model/quotes');
 var users = require('../model/users');
 var userQuote = require('../model/user_quote');
-var article = require('../model/articles');
+var articles = require('../model/articles');
 
 var auth = require('../lib/auth');
 var alchemyActions = require('../watson-api/alchemy-action');
@@ -45,9 +45,9 @@ module.exports = function(app, passport) {
 							}
 						});
 
-						article.getArticleByUrl(url).then(function(_articles){
+						articles.getArticleByField('url',url).then(function(_articles){
 							if (_articles.length === 0) {
-								article.insert({url:url}).then(function(result){
+								articles.addArticle({url:url}).then(function(result){
 									if (result.inserted == 1) {
 										console.log('insert into article successfully');
 										var idArticle = result.generated_keys[0];
@@ -56,28 +56,28 @@ module.exports = function(app, passport) {
 										});
 										
 										alchemyActions.keywords(url, function(result){
-											article.update(idArticle, {'keywords': result.keywords})
+											articles.updateArticle(idArticle, {'keywords': result.keywords})
 												.then(function(result){
 													console.log('keywords update');
 												});
 										});
 										
 										alchemyActions.taxonomy(url, function(result){
-											article.update(idArticle, {'taxonomy': result.taxonomy.filter((taxonomy)=>taxonomy.score>0.5)})
+											articles.updateArticle(idArticle, {'taxonomy': result.taxonomy.filter((taxonomy)=>taxonomy.score>0.5)})
 												.then(function(result){
 													console.log('taxonomy update');
 												});
 										});
 										
 										alchemyActions.concepts(url, function(result){
-											article.update(idArticle, {'concepts': result.concepts})
+											articles.updateArticle(idArticle, {'concepts': result.concepts})
 												.then(function(result){
 													console.log('concepts update');
 												});
 										});
 					
 										alchemyActions.author(url, function(result){
-											article.update(idArticle, {'author': result.author})
+											articles.updateArticle(idArticle, {'author': result.author})
 												.then(function(result){
 													console.log('author update');
 												});
