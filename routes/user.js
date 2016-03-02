@@ -9,8 +9,8 @@ module.exports = function(app, passport) {
 
 	app.get('/auth/google/callback', passport.authenticate('google', {
 		failureRedirect: '/'
-	}), function(req, res) {console.log(req.user.token);
-		res.cookie('corateToken', req.user.token, {maxAge: 60*60*24*7, httpOnly: true});
+	}), function(req, res) {
+		// res.cookie('corateToken', req.user.token, {maxAge: 60*60*24*7, httpOnly: true});
 		res.redirect('/dashboard');
 	});
 

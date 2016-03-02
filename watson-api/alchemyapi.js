@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
+var config = require('./config');
 
 var http = require('http');
 var fs = require('fs');
@@ -23,54 +23,9 @@ var fs = require('fs');
 exports = module.exports = AlchemyAPI;
 
 
-
-/** 
-  * Checks if file is called directly, and then writes the API key to api_key.txt if it's included in the args 
-  *
-  * Note: if you don't have an API key, register for one at: http://www.alchemyapi.com/api/register.html
-  *
-  * INPUT:
-  * Your API Key (sent as a command line argument)
-  *
-  * OUTPUT:
-  * none
-*/  
-if (require.main === module) {
-	//file was called directly from command line to set the key
-	if (process.argv[2]) {
-		console.log('Args: ' + process.argv[2]);
-		fs.writeFile(__dirname + '/api_key.txt',process.argv[2], function(err) {
-			if (err) {
-				console.log('Error, unable to write key file: ' + err);
-				process.exit(1);
-			} else {
-				console.log('AlchemyAPI key: ' + process.argv[2] + ' successfully written to api_key.txt');
-				console.log('You are now ready to start using AlchemyAPI. For an example, run: node app.js');
-				process.exit(0);
-			}
-		});
-	} else {
-		console.log('Are you trying to set the key? Make sure to use: node alchemyapi.js YOUR_KEY_HERE');
-		process.exit(1);
-	}
-}
-
-
-
 function AlchemyAPI() {
 
-	//Load the key from api_key.txt
-	try {
-		// key = fs.readFileSync(__dirname + '/api_key.txt').toString().trim();
-    key='cd4c324f96f9310cf63db3cca1c8ca5e8b250d92';
-	}
-	catch(err) {
-		//Create the file
-		fs.openSync(__dirname + '/api_key.txt', 'w');
-		console.log('API key not detected in api_key.txt, please run: node alchemyapi.js YOUR_KEY_HERE');
-		console.log('If you do not have a key, register for one at: http://www.alchemyapi.com/api/register.html');
-		process.exit(1);
-	}
+	var key = config.api_key;
 	
 	//Make sure the key formating looks good
 	if (key.length != 40) {
