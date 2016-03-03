@@ -107,10 +107,12 @@ module.exports = function(app, passport) {
 								});
 							}
 						});
+					} else {
+						res.json({error: 1, message: 'can not insert'});
 					}
 				});
 			} else {
-				res.json({error: 1});
+				res.json({error: 1, message: 'user not exist'});
 			}
 		});
 	});
