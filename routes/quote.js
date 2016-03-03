@@ -63,10 +63,12 @@ module.exports = function(app, passport) {
 										
 										alchemyActions.keywords(url, function(result){
 											var keywords = result.keywords;
-											var keywordsData = keywords.map((keyword) => ({
-												'relevance': keyword.relevance, 
-												'text': keyword.text
-											}));
+											var keywordsData = keywords.map(function(keyword){
+												return {
+													'relevance': keyword.relevance, 
+													'text': keyword.text
+												};
+											});
 											article.update(idArticle, {'keywords': keywordsData}).then(function(result){
 												console.log('keywords update');
 											});
