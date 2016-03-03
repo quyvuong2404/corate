@@ -5,7 +5,7 @@
   "main": "app.js",
   "repository": "https://github.com/quyvuong2404/corate",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -24,6 +24,7 @@
     "swig": "^1.4.2"
   },
   "devDependencies": {
+    "babel-core": "^6.6.4",
     "nodemon": "^1.8.1"
   }
 }
