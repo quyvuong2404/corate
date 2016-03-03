@@ -141,11 +141,13 @@ module.exports = function(app, passport) {
 	    quotes.getQuotesByUrl(url, idU).then(function(_quotes){
 	    	var response;
 	    	if (_quotes.length > 0) {
-	    		var quoteText = _quotes.map((_quote) => ({
-	    			'id': _quote.id, 
-	    			'text': _quote.htmltext, 
-	    			'path': _quote.path
-	    		}));
+	    		var quoteText = _quotes.map(function(_quote){
+	    			return {
+		    			'id': _quote.id, 
+		    			'text': _quote.htmltext, 
+		    			'path': _quote.path
+		    		};
+	    		});
 	    		response = {
 	    			'found': 1,
 	    			'text': quoteText
