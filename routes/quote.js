@@ -76,10 +76,14 @@ module.exports = function(app, passport) {
 										
 										alchemyActions.taxonomy(url, function(result){
 											var taxonomy = result.taxonomy;
-											var taxonomyData = taxonomy.filter((taxonomy) => taxonomy.score > 0.5).map((taxonomy) => ({
-												'score': taxonomy.score, 
-												'label': taxonomy.label
-											}));
+											var taxonomyData = taxonomy.filter(function(taxonomy){
+												return (taxonomy.score > 0.5);
+											}).map(function(taxonomy){
+												return {
+													'score': taxonomy.score, 
+													'label': taxonomy.label
+												};
+											});
 											article.update(idArticle, {'taxonomy': taxonomyData}).then(function(result){
 												console.log('taxonomy update');
 											});
@@ -87,10 +91,12 @@ module.exports = function(app, passport) {
 										
 										alchemyActions.concepts(url, function(result){
 											var concepts = result.concepts;
-											var conceptsData = concepts.map((concept) => ({
-												'relevance': concept.relevance, 
-												'text': concept.text
-											}));
+											var conceptsData = concepts.map(function(concept){
+												return {
+													'relevance': concept.relevance, 
+													'text': concept.text
+												};
+											});
 											article.update(idArticle, {'concepts': conceptsData}).then(function(result){
 												console.log('concepts update');
 											});
