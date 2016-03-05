@@ -9,7 +9,21 @@ var connection = connect.then(function(connection){
 	module.exports.findAllByUser = function(idU){
 		return userQuote.getQuotesByUser(idU).then(function(idQs){
 			if (idQs.length > 0) {
-				return r.table(table).getAll(r.args(idQs)).orderBy(r.desc('created_at')).run(connection).then(function(result){
+				return r.table(table)
+						.getAll(r.args(idQs))
+						.orderBy(r.desc('created_at'))
+						.merge(function(quote){
+							return {
+								tags: {
+									keywords: r.table('article').get(quote('idArticle'))('keywords'),
+									taxonomy: r.table('article').get(quote('idArticle'))('taxonomy'),
+									concepts: r.table('article').get(quote('idArticle'))('concepts'),
+									author:   r.table('article').get(quote('idArticle'))('author')
+								}
+							}
+						})
+						.run(connection)
+						.then(function(result){
 					return result.toArray();
 				});
 			} else {

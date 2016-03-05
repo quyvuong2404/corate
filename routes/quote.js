@@ -31,7 +31,7 @@ module.exports = function(app, passport) {
 					weburl: url,
 					path: req.body.nodePath,
 					htmltext: req.body.htmltext,
-					created_at: r.now()
+					created_at: Date.now()
 				};
 				quotes.create(data).then(function(result){
 					if (result.inserted == 1) {

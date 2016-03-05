@@ -19,6 +19,7 @@ setup.setupdb();
 require('./config/passport')(passport);
 
 // setup swig template
+swig.setDefaults({cache: false});
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');

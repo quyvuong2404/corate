@@ -14,13 +14,24 @@
     <div id="tab1" class="tab-pane fade in active">
         {% for item in list %}
             <div class="bubble">
-                <span class="left-bubble-symbol">&#8220;</span>
-                <span class="right-bubble-symbol">&#8221;</span>
+                <!-- <span class="left-bubble-symbol">&#8220;</span> -->
+                <!-- <span class="right-bubble-symbol">&#8221;</span> -->
                 <a href="{{ item.weburl }}" target="_blank">{{ item.text }}</a>
-                <div class="bubble-overlay">
-                    <a href="#"><i class="fa fa-files-o"></i><br><span>Copy</span></a>
-                    <a href="#" style="margin: 0 27px"><i class="fa fa-file-text-o"></i><br><span>URL</span></a>
-                    <a href="#"><i class="fa fa-upload"></i><br><span>Share</span></a>
+                <!-- <div class="bubble-overlay"> -->
+                    <!-- <a href="#"><i class="fa fa-files-o"></i><br><span>Copy</span></a> -->
+                    <!-- <a href="#" style="margin: 0 27px"><i class="fa fa-file-text-o"></i><br><span>URL</span></a> -->
+                    <!-- <a href="#"><i class="fa fa-upload"></i><br><span>Share</span></a> -->
+                <!-- </div> -->
+                <div class="tags">
+                    <img src="/images/ic_tag.png">
+                    {% for keyword in item.tags.keywords %}
+                        <span>{{ keyword.text }}</span>
+                    {% endfor %}
+                </div>
+                <div class="time-title">
+                    <span style="margin-right: 6px">{{ item.created_at }}</span>
+                    &#8226;
+                    <span style="margin-left: 6px">{{ item.webtitle }}</span>
                 </div>
             </div>
         {% endfor %}

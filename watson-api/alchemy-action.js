@@ -4,21 +4,21 @@ var alchemyapi = new AlchemyAPI();
 
 
 module.exports.entities = function(url, callback) {
-	alchemyapi.entities('url', url,{ 'sentiment':1 }, function(response) {
+	alchemyapi.entities('url', url, {}, function(response) {
 		callback(response);
 	});
 }
 
 
 module.exports.keywords = function(url, callback) {
-	alchemyapi.keywords('url', url, { 'sentiment':1 }, function(response) {
+	alchemyapi.keywords('url', url, {}, function(response) {
 		callback(response);
 	});
 }
 
 
 module.exports.concepts = function(url, callback) {
-	alchemyapi.concepts('url', url, { 'showSourceText':1 }, function(response) {
+	alchemyapi.concepts('url', url, {}, function(response) {
 		callback(response);
 	});
 }
